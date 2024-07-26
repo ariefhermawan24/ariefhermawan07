@@ -1,0 +1,492 @@
+body {
+  background-color: black;
+}
+
+.navbar {
+  background-color: black;
+  position: fixed;
+
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.navbar-brand,
+.navbar-toggler-icon {
+  color: white;
+}
+
+.navbar-toggler-icon {
+  background-color: white;
+}
+
+.nav-btn {
+  color: white;
+}
+
+.container-content {
+  margin-top: 60px;
+}
+
+.background {
+  /* Set your background image here */
+  background-size: cover;
+  background-position: center;
+  color: #FFD700;
+  /* Yellow text color */
+  padding: 250px 0;
+  /* Adjust padding as needed */
+}
+
+.menu {
+  background-image: url('../Image/background-portofolio.gif');
+}
+
+.profile-image {
+  width: 250px;
+  height: 250px;
+  border: 5px solid #ffffff;
+  /*Lightbluebordercolor*/
+  border-radius: 50%;
+}
+
+.container-content-aboutme {
+  color: azure;
+}
+
+.container-content-aboutme {
+  background-color: #333;
+  /* Background color for "About Me" section */
+  color: #fff;
+  /* Text color */
+  padding: 50px 0;
+  /* Padding top and bottom for content */
+  text-align: center;
+}
+
+.About-Me {
+  font-size: 36px;
+  /* Font size for the "About Me" heading */
+  font-weight: bold;
+  margin-bottom: 20px;
+  /* Bottom margin for the heading */
+}
+
+.h5-style {
+  font-size: 18px;
+  /* Font size for the main text content */
+  margin-bottom: 20px;
+  /* Bottom margin for text */
+  margin-inline-start: 20px;
+  margin-right: 20px;
+}
+
+.h3-style {
+  font-size: 20px;
+  /* Font size for details like name, birthdate, etc. */
+  font-weight: bold;
+}
+
+.text-container {
+  position: relative;
+  color: #FFD700;
+  font-size: 15px;
+
+}
+
+.first {
+
+  /* Menjadikan posisi absolut */
+  top: 0;
+  /* Meletakkan teks di bagian atas */
+  left: 0;
+  /* Meletakkan teks di bagian kiri */
+}
+
+.second {
+  font-weight: bold;
+  overflow: hidden;
+  /* Mengatasi teks yang keluar dari batas */
+  border-right: .15em solid orange;
+  /* Efek kursor yang "mengetik" */
+  white-space: nowrap;
+  /* Mencegah pemisahan kata */
+  margin: 0 auto;
+  /* Posisi tengah */
+  letter-spacing: .15em;
+  /* Jarak antar huruf */
+
+}
+
+.navbar {
+  background-color: #040d43;
+  /* Warna biru tosca */
+}
+
+.navbar-brand {
+  font-weight: bold;
+  margin-right: auto;
+}
+
+.navbar-text {
+  font-family: "Roboto Slab", serif;
+  margin-right: auto;
+  color: white;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%281, 1, 1, 1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.nav-link {
+  color: white;
+  margin-right: 20px;
+  margin-left: 5px;
+}
+
+.nav-link:hover,
+.nav-link active,
+.nav-link.active {
+  color: #40E0D0 !important;
+  /* Warna biru tosca untuk efek hover dan aktif */
+}
+
+.section {
+  color: white;
+  height: 800px;
+  background-color: black;
+}
+
+.background {
+  height: 800px;
+  /* Tinggi setiap section */
+  background-size: cover;
+  /* Menutupi seluruh elemen */
+  background-position: center;
+  /* Memusatkan gambar di tengah */
+  background-repeat: no-repeat;
+  /* Mencegah gambar diulang */
+}
+
+.cover {
+  background-image: url('../Image/background-portofolio.gif');
+  background-repeat: no-repeat;
+  /* Mencegah gambar diulang */
+  background-attachment: fixed;
+  /* Efek parallax */
+}
+
+.footer-cover {
+  background-image: url('../Image/footer-bg-dark.png');
+  background-repeat: no-repeat;
+  /* Mencegah gambar diulang */
+}
+
+.home-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  /* Agar mengisi seluruh tinggi dari elemen induk */
+  width: 100%;
+  /* Agar mengisi seluruh lebar dari elemen induk */
+}
+
+.profile-img {
+  width: 150px;
+  /* Ukuran gambar */
+  height: 150px;
+  /* Ukuran gambar */
+  border-radius: 50%;
+  border: 5px solid #4a4a4a;
+  /* Garis abu-abu gelap */
+  margin-bottom: 20px;
+}
+
+.home-title {
+  font-family: "Roboto Slab", serif;
+  margin-bottom: 10px;
+}
+
+.home-description {
+  font-family: "Black Ops One", system-ui;
+  margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 768px) {
+  .home-title {
+    font-family: "Roboto Slab", serif;
+    font-size: 1.3rem;
+    /* Ukuran font khusus untuk Android */
+    margin-bottom: 20px;
+  }
+
+  .home-description {
+    font-family: "Black Ops One", system-ui;
+    font-size: 1rem;
+    /* Ukuran font khusus untuk Android */
+    margin-bottom: 20px;
+  }
+
+  .section {
+    height: auto;
+    /* Sesuaikan tinggi jika perlu */
+    background-color: #000000;
+    /* Warna latar belakang khusus untuk Android */
+  }
+}
+
+.btn-custom {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.btn-about-me {
+  background-color: #698188;
+  color: white;
+}
+
+.btn-download-cv {
+  background-color: #0097B2;
+  color: white;
+}
+
+.about-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Untuk desktop */
+.about-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 20px;
+  gap: 20px;
+  margin-top: -80px;
+}
+
+.about-left {
+  flex: 1;
+  background-color: #040d43;
+  /* Biru tosca */
+  border-radius: 30px;
+  border: 5px solid #ffffff;
+  padding: 20px;
+  position: relative;
+}
+
+.about-right {
+  flex: 1;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.about-left p {
+  font-size: 20px;
+}
+
+.data-diri {
+  text-align: start !important;
+  margin-left: 20px;
+}
+
+.about-left h1,
+.about-left p,
+.about-left h4 {
+  text-align: center;
+}
+
+.about-left .social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.about-right .progress {
+  background-color: #f0f0f0;
+  margin-bottom: 10px;
+}
+
+/* Untuk mobile */
+@media only screen and (max-width: 768px) {
+  .about-container {
+    margin-top: -120px;
+    flex-direction: column;
+  }
+
+  .about-left,
+  .about-right {
+    width: 100%;
+  }
+
+  .about-left {
+    margin-bottom: 20px;
+  }
+
+  .about-left::before {
+    display: none;
+  }
+
+  .porto-container {
+    margin-top: -150px !important;
+  }
+
+  .porto {
+    height: auto !important;
+  }
+}
+
+.data-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  /* Menjaga label dan nilai pada posisi yang sama secara vertikal */
+  margin-bottom: 10px;
+}
+
+.label {
+  font-weight: bold;
+  margin-right: 10px;
+  white-space: nowrap;
+  /* Menghindari teks label terputus jika terlalu panjang */
+}
+
+.value {
+  text-align: left;
+  margin-left: 30px;
+  /* Tambahan margin jika diperlukan untuk perataan lebih lanjut */
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: white;
+  font-size: 2rem;
+}
+
+.project-card {
+  border: none;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+}
+
+.project-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.project-card .card-body {
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+}
+
+.project-card .card-title {
+  color: white;
+  margin: 0;
+}
+
+.porto-container {
+  margin-top: -80px;
+}
+
+
+.footer-title {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 32px;
+  color: #0097B2;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  /* Jarak antar item */
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  /* Jarak antara ikon dan teks */
+  background: rgba(247, 247, 247, 0.1);
+  /* Transparan putih untuk kontras */
+  padding: 10px 40px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 500px;
+}
+
+.contact-icon {
+  font-size: 28px;
+  color: #0097B2;
+  /* Warna ikon */
+}
+
+.contact-text {
+  font-size: 20px;
+  color: white;
+}
+
+.footer {
+  background-color: #040d43;
+  /* Warna footer */
+  color: white;
+  padding: 20px 0;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.card-img-top {
+  width: 100%;
+  /* Ensures the image takes up the full width of the card */
+  height: 400px;
+  /* Sets a fixed height for the image */
+  object-fit: cover;
+  /* Ensures the image covers the set dimensions without distortion */
+  display: block;
+}
+
+.card {
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.porto {
+  height: 700px !important;
+
+  @media only screen and (max-width: 768px) {
+    height: auto !important;
+  }
+}
