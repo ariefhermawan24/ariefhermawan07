@@ -176,7 +176,7 @@ body {
 }
 
 .cover {
-  background-image: url('../Image/background-portofolio.gif');
+  background-image: url('./Image/background-portofolio.gif');
   background-repeat: no-repeat;
   /* Mencegah gambar diulang */
   background-attachment: fixed;
@@ -184,7 +184,7 @@ body {
 }
 
 .footer-cover {
-  background-image: url('../Image/footer-bg-dark.png');
+  background-image: url('./Image/footer-bg-dark.png');
   background-repeat: no-repeat;
   /* Mencegah gambar diulang */
 }
