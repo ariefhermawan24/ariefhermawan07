@@ -243,6 +243,13 @@ body {
     background-color: #000000;
     /* Warna latar belakang khusus untuk Android */
   }
+
+   .cover {
+    background-image: url('./Image/background-android.gif');
+    background-repeat: no-repeat;
+    /* Mencegah gambar diulang */
+    background-attachment: fixed;
+  }
 }
 
 .btn-custom {
@@ -445,6 +452,26 @@ body {
   font-size: 28px;
   color: #0097B2;
   /* Warna ikon */
+}
+
+.contact-text {
+  font-size: 20px;
+  color: white;
+}
+
+/* Styles for Android/mobile */
+@media screen and (max-width: 768px) {
+  .contact-item {
+    flex-direction: column;
+    gap: 5px;
+    /* Kurangi jarak antara ikon dan teks untuk tampilan mobile */
+    text-align: center;
+    padding: 15px;
+  }
+
+  .contact-icon {
+    margin-bottom: 5px;
+  }
 }
 
 .contact-text {
