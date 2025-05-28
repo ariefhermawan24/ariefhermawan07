@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="./image/logo/Logo Portofolio.png" type="image/png" />
+  <title>MARFH Radio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="./styles/style.css">
+</head>
+<body>
+  <div class="container py-4" style="margin-top: 50px !important;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <i class="fas fa-broadcast-tower fa-lg me-2 text-info"></i>
+        <span class="fw-bold">Radio Stream</span>
+      </a>
+
+      <!-- Toggle Button untuk Mobile -->
+      <span id="navbarToggler" class="navbar-toggler" role="button" aria-controls="navbarContent" aria-expanded="false"
+        aria-label="Toggle navigation" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <i class="fas fa-bars"></i> <!-- ikon awal: bars -->
+      </span>
+
+      <!-- Konten Navbar -->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+        <form class="d-flex mt-3 mt-lg-0" role="search" onsubmit="handleSearch(event)">
+          <input class="form-control me-2" type="search" placeholder="Cari stasiun..." aria-label="Search"
+            id="searchInput">
+          <button class="btn btn-outline-info" type="submit"><i class="fas fa-search"></i></button>
+        </form>
+      </div>
+    </nav>
+
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <label for="country" class="form-label">Pilih Negara</label>
+        <select id="country" class="form-select"></select>
+      </div>
+      <div class="col-12 col-md-4">
+        <label for="genre" class="form-label">Pilih Genre</label>
+        <select id="genre" class="form-select">
+          <option value="">Semua</option>
+        </select>
+      </div>
+      
+      <div class="col-12 col-md-4 d-grid">
+        <label class="form-label invisible">Cari</label>
+        <button id="loadBtn" class="btn btn-primary seach-button">🔍 Cari Radio</button>
+      </div>   
+    </div>
+
+    <div id="loadingSpinner" class="text-center my-4 d-none">
+      <!-- Animasi radio SVG -->
+      <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
+        <rect x="10" y="30" width="80" height="40" rx="5" fill="#4fc3f7">
+          <animate attributeName="fill" values="#4fc3f7;#0288d1;#4fc3f7" dur="1.5s" repeatCount="indefinite" />
+        </rect>
+        <circle cx="30" cy="50" r="5" fill="white">
+          <animate attributeName="r" values="5;7;5" dur="1s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="50" cy="50" r="5" fill="white">
+          <animate attributeName="r" values="5;7;5" dur="1s" begin="0.3s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="70" cy="50" r="5" fill="white">
+          <animate attributeName="r" values="5;7;5" dur="1s" begin="0.6s" repeatCount="indefinite" />
+        </circle>
+      </svg>
+      <p class="text-muted mt-2">Memuat stasiun radio...</p>
+    </div>
+    
+    <ul id="radioList" class="list-group mt-4"></ul>
+
+   <!-- Floating Player -->
+   <div id="floatingPlayer" class="fixed-bottom bg-dark text-white shadow-lg d-none">
+     <!-- Mini Header: Tombol Minimize dan Exit -->
+     <div
+       class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom border-secondary floating-controls">
+       <div class="d-flex align-items-center gap-2">
+         <i class="fa-solid fa-angle-down cursor-pointer" id="minimizeBtn" title="Minimize"></i>
+       </div>
+       <i class="fa-solid fa-xmark cursor-pointer" id="exitBtn" title="Tutup"></i>
+     </div>
+
+     <!-- Konten Full Player -->
+     <div id="fullPlayerContent" class="p-3">
+       <div id="nowPlaying" class="mb-2">Belum ada stasiun diputar.</div>
+       <audio id="audioPlayer" controls class="w-100"></audio>
+     </div>
+
+     <!-- Konten Minimized -->
+     <div id="minimizedContent" class="d-none p-2 d-flex justify-content-between align-items-center p-3">
+       <div>
+         <div id="minTitle" class="fw-bold">Tidak ada lagu</div>
+         <div id="minDescription" class="text-muted small">Deskripsi</div>
+       </div>
+       <div class="d-flex align-items-center gap-2">
+         <i class="fa-solid fa-pause cursor-pointer" id="togglePlayBtn"></i>
+       </div>
+     </div>
+   </div>
+  </div>
+
+  <!-- Redesain Modal Gagal Memutar - Dark Modern -->
+  <div class="modal fade" id="failModal" tabindex="-1" aria-labelledby="failModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content bg-gradient-to-br from-gray-900 to-black text-white rounded-4 border-0 shadow-lg">
+
+        <div class="modal-header border-0 d-flex align-items-center px-4 pt-4 pb-2">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-exclamation-circle text-danger fs-3 me-3"></i>
+            <h5 class="modal-title mb-0 fw-semibold" id="failModalLabel">Gagal Memutar</h5>
+          </div>
+          <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"
+            aria-label="Tutup"></button>
+        </div>
+
+        <div class="modal-body d-flex flex-column align-items-center text-center px-4 pb-4">
+          <i class="fas fa-radio text-primary fs-1 mb-3"></i>
+          <p class="fs-6 text-light mb-0">
+            Maaf, stasiun radio ini tidak dapat diputar saat ini.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./scripts/script.js"></script>
+
+</body>
+
+
+
+</html>

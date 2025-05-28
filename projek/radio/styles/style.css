@@ -1,0 +1,213 @@
+body {
+  background-color: #121212;
+  color: #f8f9fa;
+}
+
+#nowPlaying {
+  font-size: 1.1rem;
+}
+
+#radioList li:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.scroll-container {
+  width: 100% !important;
+  /* Pastikan ambil 100% lebar dari parent (li) */
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  /* jarak antar teks dan tombol */
+  padding: 0.5rem 1rem;
+}
+
+.list-group-item>span {
+  flex-grow: 1;
+  /* span ambil sisa space */
+  flex-shrink: 1;
+  /* span bisa mengecil */
+  min-width: 0;
+  /* penting agar teks bisa wrap dan max-width bekerja */
+  overflow: hidden;
+}
+
+.station-info {
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Tombol Putar */
+.list-group-item>button {
+  flex-shrink: 0;
+  /* jangan kecilkan tombol */
+  white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .list-group-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .list-group-item>button {
+    align-self: flex-end;
+    margin-top: 8px;
+  }
+
+  .list-group-item>span {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 769px) {
+  .seach-button {
+    margin-top: -30px !important;
+  }
+}
+
+.scroll-content {
+  white-space: nowrap;
+  display: inline-block;
+  animation-play-state: paused;
+  will-change: transform;
+}
+
+@keyframes scroll-text {
+  0% {
+    transform: translateX(0);
+  }
+
+  10% {
+    transform: translateX(0);
+  }
+
+  80% {
+    transform: translateX(var(--scroll-distance));
+  }
+
+  90% {
+    transform: translateX(var(--scroll-distance));
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+
+.btn-success {
+  white-space: nowrap;
+}
+
+#floatingPlayer {
+  z-index: 1055;
+  transition: transform 0.4s ease-in-out, opacity 0.4s;
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.floating-controls {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+#floatingPlayer {
+  transition: transform 0.3s ease-in-out;
+  z-index: 9999;
+  border-top: 1px solid #444;
+}
+
+#floatingPlayer.minimized #fullPlayerContent {
+  display: none;
+}
+
+#floatingPlayer.minimized #minimizedContent {
+  display: flex !important;
+}
+
+#minimizedContent i {
+  font-size: 1.2rem;
+}
+
+/* Rotate arrow icon */
+.rotate-up {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+.rotate-down {
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+/* Hover effect exit button */
+#exitBtn:hover {
+  color: red;
+  transform: scale(1.2);
+  transition: all 0.2s ease;
+}
+
+#minimizeBtn,
+#exitBtn {
+  transition: transform 0.3s ease, color 0.2s ease;
+}
+
+/* Cursor pointer untuk interaktivitas */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+
+#floatingPlayer.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.transition-all {
+  transition: all 0.4s ease;
+}
+
+#navbarToggler i {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  display: inline-block;
+}
+
+#navbarToggler .fa-bars {
+  transform-origin: center;
+  opacity: 1;
+}
+
+#navbarToggler .fa-times {
+  transform-origin: center;
+  opacity: 1;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+
+  background-color: #000;
+  /* warna gelap (hitam) untuk tema dark */
+  color: #fff;
+
+  box-shadow: 0 2px 0 white;
+  /* garis bawah putih */
+}
