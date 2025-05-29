@@ -427,7 +427,13 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => floatingPlayer.classList.add('d-none'), 300);
     audioPlayer.pause();
     resetFloatingPlayerUI();
+
+    // 🔽 Hapus highlight radio aktif
+    document.querySelectorAll('.list-group-item').forEach(li => {
+      li.classList.remove('active-station');
+    });
   });
+
 
   function resetFloatingPlayerUI() {
     floatingPlayer.classList.remove('minimized');
