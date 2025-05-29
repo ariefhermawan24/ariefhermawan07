@@ -164,7 +164,11 @@ body {
 
 #minimizeBtn,
 #exitBtn {
-  transition: transform 0.3s ease, color 0.2s ease;
+  transition: transform 0.3s ease, color 0.2s ease !important;
+  -webkit-transition: transform 0.3s ease, color 0.2s ease !important;
+  -moz-transition: transform 0.3s ease, color 0.2s ease !important;
+  -ms-transition: transform 0.3s ease, color 0.2s ease !important;
+  -o-transition: transform 0.3s ease, color 0.2s ease !important;
 }
 
 /* Cursor pointer untuk interaktivitas */
@@ -183,17 +187,23 @@ body {
 }
 
 #navbarToggler i {
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  display: inline-block;
+  transition: transform 0.3s ease, opacity 0.3s ease !important;
+  display: inline-block !important;
+  transform-origin: center !important;
+  opacity: 1 !important;
+  -webkit-transition: transform 0.3s ease, opacity 0.3s ease !important;
+  -moz-transition: transform 0.3s ease, opacity 0.3s ease !important;
+  -ms-transition: transform 0.3s ease, opacity 0.3s ease !important;
+  -o-transition: transform 0.3s ease, opacity 0.3s ease !important;
 }
 
-#navbarToggler .fa-bars {
-  transform-origin: center;
-  opacity: 1;
+#navbarToggler i.rotate-out {
+  transform: rotate(90deg);
+  opacity: 0;
 }
 
-#navbarToggler .fa-times {
-  transform-origin: center;
+#navbarToggler i.rotate-in {
+  transform: rotate(0deg);
   opacity: 1;
 }
 
@@ -210,4 +220,41 @@ body {
 
   box-shadow: 0 2px 0 white;
   /* garis bawah putih */
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+#customControls i {
+  color: white !important;
+  transition: color 0.3s !important;
+  -webkit-transition: color 0.3s !important;
+  -moz-transition: color 0.3s !important;
+  -ms-transition: color 0.3s !important;
+  -o-transition: color 0.3s !important;
+}
+
+#togglePlayBtn:hover,
+#minimizedtogglePlayBtn:hover {
+  color: #0df2c3 !important;
+}
+
+.disabled-icon {
+  opacity: 0.4 !important;
+  pointer-events: none !important;
+}
+
+.error-icon {
+  color: red !important;
+  opacity: 1;
+  pointer-events: none !important;
+}
+
+.active-station strong {
+  color: #0df2c3 !important;
+}
+
+.active-station .scroll-content {
+  color: #0df2c3 !important;
 }
