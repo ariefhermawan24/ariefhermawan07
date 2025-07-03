@@ -27,6 +27,25 @@ document.addEventListener('DOMContentLoaded', () => {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  const filterBar = document.getElementById('filterBar');
+  let isSticky = false;
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 150) {
+      if (!isSticky) {
+        filterBar.classList.add('sticky-show');
+        radioList.classList.add('mt-sticky');
+        isSticky = true;
+      }
+    } else {
+      if (isSticky) {
+        filterBar.classList.remove('sticky-show');
+        radioList.classList.remove('mt-sticky');
+        isSticky = false;
+      }
+    }
+  });
+
   async function animateIconChange(newClass) {
     if (animating) return; // blok jika masih animasi
     animating = true;
@@ -55,36 +74,94 @@ document.addEventListener('DOMContentLoaded', () => {
 
   navbarContent.addEventListener('show.bs.collapse', () => {
     animateIconChange('fa-times');
+    radioList.classList.add('push-down');
+    if (isSticky) {
+      radioList.classList.add('mt-sticky');
+    }
+    filterBar.classList.add('push-down');
   });
 
   navbarContent.addEventListener('hide.bs.collapse', () => {
     animateIconChange('fa-bars');
+    radioList.classList.remove('push-down');
+    filterBar.classList.remove('push-down');
   });
 
   let isMinimized = false;
+  let codeToCommonName = {};
 
   async function fetchCountries() {
     try {
-      const response = await fetch('https://de1.api.radio-browser.info/json/countries');
-      const countries = await response.json();
+      const [countriesRes, restCountriesRes] = await Promise.all([
+        fetch('https://de1.api.radio-browser.info/json/countries'),
+        fetch('https://restcountries.com/v3.1/all?fields=cca2,name')
+      ]);
 
-      countries.sort((a, b) => a.name.localeCompare(b.name));
+      const countries = await countriesRes.json();
+      const restCountriesRaw = await restCountriesRes.json();
 
-      // Tambahkan opsi "Semua Negara" di paling atas
+      if (!Array.isArray(restCountriesRaw)) {
+        console.error("API restcountries tidak mengembalikan array:", restCountriesRaw);
+        return;
+      }
+
+      restCountriesRaw.forEach(country => {
+        if (country.cca2 && country.name?.common) {
+          codeToCommonName[country.cca2.toUpperCase()] = country.name.common;
+        }
+      });
+
+      const excludedCountries = [
+        // banned country
+      ];
+
+      // Proses dan filter negara
+      const processed = countries
+        .filter(c => c.iso_3166_1 && !excludedCountries.includes(c.name))
+        .map(c => ({
+          value: c.name,
+          display: codeToCommonName[c.iso_3166_1.toUpperCase()] || c.iso_3166_1,
+          code: c.iso_3166_1.toUpperCase()
+        }))
+        .sort((a, b) => a.display.localeCompare(b.display));
+
+      // Clear sebelumnya
+      countrySelect.innerHTML = '';
+      const renderedValues = new Set();
+
+      // Tambahkan "Semua Negara"
       const allOption = document.createElement('option');
       allOption.value = '';
       allOption.textContent = 'Semua Negara';
       countrySelect.appendChild(allOption);
+      renderedValues.add(''); // tandai sudah ditambahkan
 
-      // Tambahkan semua negara dari API
-      countries.forEach(country => {
-        const option = document.createElement('option');
-        option.value = country.name;
-        option.textContent = country.name;
-        countrySelect.appendChild(option);
-      });
+      // Render per batch
+      let index = 0;
+      const batchSize = 30;
+
+      function renderNextBatch() {
+        const batch = processed.slice(index, index + batchSize);
+        batch.forEach(c => {
+          if (!renderedValues.has(c.value)) {
+            const option = document.createElement('option');
+            option.value = c.value;
+            option.textContent = c.display;
+            option.dataset.code = c.code;
+            countrySelect.appendChild(option);
+            renderedValues.add(c.value);
+          }
+        });
+        index += batchSize;
+        if (index < processed.length) {
+          requestAnimationFrame(renderNextBatch);
+        }
+      }
+
+      renderNextBatch();
+
     } catch (error) {
-      console.error('Gagal mengambil data negara:', error);
+      console.error('Gagal memuat negara:', error);
     }
   }
 
@@ -129,13 +206,14 @@ document.addEventListener('DOMContentLoaded', () => {
   loadTopGenres(400); // Ambil 20 genre terpopuler
 
   loadBtn.addEventListener('click', async () => {
-    const country = countrySelect.value;
+    const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+    const countryCode = selectedOption?.dataset.code || '';
     const genre = genreSelect.value.trim();
 
     let url = 'https://de1.api.radio-browser.info/json/stations/search?limit=1000';
 
-    if (country !== '') {
-      url += `&country=${encodeURIComponent(country)}`;
+    if (countryCode !== '') {
+      url += `&countrycode=${encodeURIComponent(countryCode)}`;
     }
 
     if (genre !== '') {
@@ -146,13 +224,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const res = await fetch(url);
-      let stations = await res.json();
+      const stations = await res.json();
 
-      // Filter stasiun yang punya URL valid
-      const validStations = stations.filter(station => station.url_resolved);
+      const uniqueMap = new Map();
+      for (const station of stations) {
+        if (!station.url_resolved) continue;
+        const key = `${station.name.trim().toLowerCase()}|${station.url_resolved.trim().toLowerCase()}`;
+        if (!uniqueMap.has(key)) {
+          uniqueMap.set(key, station);
+        }
+      }
 
-      // Ambil hanya 50 stasiun pertama
-      const topStations = validStations.slice(0, 50);
+      const uniqueStations = Array.from(uniqueMap.values());
+      const topStations = uniqueStations.slice(0, 50);
 
       displayStations(topStations);
     } catch (error) {
@@ -200,68 +284,102 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function displayStations(stations) {
     radioList.innerHTML = '';
+
     if (!stations.length) {
       radioList.innerHTML = '<li class="list-group-item text-danger">Tidak ada stasiun ditemukan.</li>';
       return;
     }
 
-    stations.forEach(station => {
+    stations.forEach((station, index) => {
       const li = document.createElement('li');
-      li.className = 'list-group-item d-flex justify-content-between align-items-center flex-column flex-sm-row';
+      li.className = 'list-group-item flex-column justify-content-between align-items-start station-item';
+
+      // Ambil nama negara umum dari kode
+      const displayCountry =
+        codeToCommonName[station.countrycode?.toUpperCase()] || station.country;
+
       li.innerHTML = `
-      <span class="text-start w-100">
-        <strong>${station.name}</strong><br>
-        <small class="station-info">
-          <div class="scroll-container">
-            <div class="scroll-content">${station.country} • ${station.tags}</div>
-          </div>
-        </small>
-      </span>
-      <button class="btn btn-sm btn-success mt-2 mt-sm-0">Putar</button>
-    `;
+  <div class="station-top-wrapper">
+    <div class="station-logo">
+      <img src="${station.favicon}" 
+     onerror="this.onerror=null; this.src='./image/default-radio.png'" 
+     alt="logo" 
+     class="station-img" />
+    </div>
+    <div class="station-info">
+      <strong>${station.name}</strong><br>
+      <small>
+        <div class="scroll-container">
+          <div class="scroll-content">${displayCountry} • ${station.tags}</div>
+        </div>
+      </small>
+    </div>
+  </div>
+
+  <div class="station-bottom d-flex justify-content-between align-items-center w-100 mt-1">
+    <div class="d-flex align-items-center flex-wrap">
+      ${station.bitrate ? `${station.bitrate} kbps` : '— kbps'}
+      &nbsp;•&nbsp;
+      <i class="fa-solid fa-wave-square" 
+         title="HLS support"
+         style="color: ${station.hls === 1 ? '#ffc107' : '#ccc'};"></i>
+      &nbsp;•&nbsp;
+      <i class="fa-${station.lastcheckok === 1 ? 'solid fa-circle-check' : 'solid fa-circle-xmark'}" 
+         title="${station.lastcheckok === 1 ? 'OK' : 'Error'}"
+         style="color: ${station.lastcheckok === 1 ? '#28a745' : '#dc3545'};"></i>
+    </div>
+    <button class="btn btn-sm btn-success">Putar</button>
+  </div>
+`;
 
       li.querySelector('button').addEventListener('click', () => playStation(station));
       radioList.appendChild(li);
 
-      // Contoh panggilannya untuk semua <li> setelah di-generate
-      document.querySelectorAll('.list-group-item').forEach(li => {
-        setupScrollingAnimation(li);
-      });
+      // Animasi: 1-per-1, lambat, terlihat urut
+      li.style.opacity = 0;
+      li.style.transform = 'translateY(30px)'; // lebih jauh biar lebih dramatis
+      setTimeout(() => {
+        li.style.transition = 'all 0.6s ease'; // lebih lambat
+        li.style.opacity = 1;
+        li.style.transform = 'translateY(0)';
+      }, index * 150); // delay per item lebih besar agar tampak satu per satu
 
+      setupScrollingAnimation(li);
     });
-
   }
 
-  function setupScrollingAnimation(li) {
-    const content = li.querySelector('.scroll-content');
-    const container = li.querySelector('.scroll-container');
+  function setupScrollingAnimation(li, nowPlaying) {
+    const containers = li.querySelectorAll('.scroll-container');
 
-    function updateAnimation() {
-      const containerWidth = container.clientWidth;
-      const contentWidth = content.scrollWidth;
+    containers.forEach(container => {
+      const content = container.querySelector('.scroll-content');
+      if (!content) return;
 
-      if (contentWidth > containerWidth) {
-        const overflow = containerWidth - contentWidth; // nilai negatif
-        const speed = 30; // px per detik, atur sesuai keinginan
-        const duration = Math.abs(overflow) / speed + 2; // +2 detik untuk pause
+      function updateAnimation() {
+        const containerWidth = container.clientWidth;
+        const contentWidth = content.scrollWidth;
 
-        // Set CSS custom property --scroll-distance dan durasi animasi
-        content.style.setProperty('--scroll-distance', `${overflow}px`);
-        content.style.animation = `scroll-text ${duration}s linear infinite`;
-        content.style.animationPlayState = 'running';
-      } else {
-        // Kalau teks muat, stop animasi dan reset posisi
-        content.style.animationPlayState = 'paused';
-        content.style.animation = 'none';
-        content.style.transform = 'translateX(0)';
+        if (contentWidth > containerWidth) {
+          const overflow = containerWidth - contentWidth;
+          const speed = 30; // px per detik
+          const duration = Math.abs(overflow) / speed + 2;
+
+          content.style.setProperty('--scroll-distance', `${overflow}px`);
+          content.style.animation = `scroll-text ${duration}s linear infinite`;
+          content.style.animationPlayState = 'running';
+        } else {
+          content.style.animationPlayState = 'paused';
+          content.style.animation = 'none';
+          content.style.transform = 'translateX(0)';
+        }
       }
-    }
 
-    // Jalankan sekali saat setup
-    updateAnimation();
+      // Jalankan saat setup
+      updateAnimation();
 
-    // Update lagi saat resize window supaya responsive
-    window.addEventListener('resize', updateAnimation);
+      // Update animasi jika layar diubah ukurannya
+      window.addEventListener('resize', updateAnimation);
+    });
   }
 
   function setPlayButtonsState(state) {
@@ -281,7 +399,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
-  function playStation(station) {
+  const countryCache = {};
+
+  async function getCountryNameFromCode(code) {
+    if (!code) return 'Unknown';
+
+    // Cek cache dulu
+    if (countryCache[code]) return countryCache[code];
+
+    try {
+      const res = await fetch(`https://restcountries.com/v3.1/alpha/${code}`);
+      const data = await res.json();
+
+      if (Array.isArray(data) && data[0]?.name?.common) {
+        const name = data[0].name.common;
+        countryCache[code] = name;
+        return name;
+      }
+    } catch (err) {
+      console.warn('Gagal fetch negara dari kode:', code, err);
+    }
+
+    return code; // fallback ke kode-nya saja
+  }
+
+  async function playStation(station) {
     if (
       !station.url_resolved ||
       (!station.url_resolved.startsWith("http://") &&
@@ -292,7 +434,57 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    nowPlaying.textContent = `🎶 ${station.name} (${station.country})`;
+    const displayCountry = await getCountryNameFromCode(station.countrycode);
+
+    nowPlaying.innerHTML = `
+  <div class="d-flex flex-nowrap gap-3 align-items-start" style="min-height: 70px;">
+        <div class="position-relative" style="min-width: 70px; width: 70px; height: 70px;">
+      <img src="${station.favicon || './image/default-radio.png'}"
+           alt="Logo"
+           class="rounded border"
+           style="width: 100%; height: 100%; object-fit: cover;"
+           onerror="this.src='./image/default-radio.png'">
+
+      ${
+        station.homepage
+          ? `<a href="${station.homepage}" target="_blank"
+                class="position-absolute rounded-circle d-flex align-items-center justify-content-center"
+                style="
+                  bottom: 4px;
+                  right: 4px;
+                  width: 16px;
+                  height: 16px;
+                  font-size: 0.75rem;
+                  text-decoration: none;
+                  background-color: rgba(255, 255, 255, 0.7);
+                  backdrop-filter: blur(3px);
+                  color: #000;
+                  transition: background-color 0.2s;
+                "
+                title="Kunjungi Website">
+                <i class="fas fa-globe"></i>
+              </a>`
+          : ''
+      }
+    </div>
+    <div class="flex-grow-1 overflow-hidden">
+      <div class="fw-bold fs-5 mb-1 text-truncate" style="max-width: 100%;">
+        ${station.name}
+      </div>
+      <div class="scroll-container text-muted small" style="max-width: 100%;">
+        <div class="scroll-content">
+          ${displayCountry || 'Unknown'} • ${station.bitrate || '-'} kbps • ${station.codec || '-'}
+        </div>
+      </div>
+    </div>
+  </div>
+`;
+
+    requestAnimationFrame(() => {
+      setupScrollingAnimation(nowPlaying);
+    });
+
+
     updateMinimizedInfo(station);
 
     // Ubah ikon jadi pause + disable klik sementara
@@ -339,12 +531,37 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    // Mulai pemutaran dan atur Media Session
     if (audioPlayer.src !== station.url_resolved) {
       audioPlayer.src = station.url_resolved;
-      // Langsung coba play() untuk trigger error lebih awal jika ada
       audioPlayer
         .play()
-        .then(() => setPlayButtonsState(null))
+        .then(() => {
+          setPlayButtonsState(null);
+
+          // ✅ Tambahkan Media Session API di sini
+          if ("mediaSession" in navigator) {
+
+            navigator.mediaSession.metadata = new MediaMetadata({
+              title: station.name || "Radio",
+              artist: displayCountry || "",
+              album: station.tags || "",
+              artwork: [{
+                src: station.favicon || "./image/default-radio.png",
+                sizes: "512x512",
+                type: "image/png",
+                onerror: "./image/default-radio.png",
+              }, ],
+            });
+
+            navigator.mediaSession.setActionHandler("play", () => {
+              audioPlayer.play();
+            });
+            navigator.mediaSession.setActionHandler("pause", () => {
+              audioPlayer.pause();
+            });
+          }
+        })
         .catch(handlePlayError);
     } else {
       audioPlayer
@@ -404,9 +621,10 @@ document.addEventListener('DOMContentLoaded', () => {
     currentTimeDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   });
 
-  function updateMinimizedInfo(station) {
+  async function updateMinimizedInfo(station) {
+    const displayCountry = await getCountryNameFromCode(station.countrycode);
     minTitle.textContent = station.name || "Tidak ada lagu";
-    minDescription.textContent = station.country || "Deskripsi tidak tersedia";
+    minDescription.textContent = displayCountry || "Deskripsi tidak tersedia";
   }
 
   // Minimize logic
@@ -419,6 +637,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateMinimizeIcon() {
     minimizeBtn.classList.toggle('rotate-up', isMinimized);
     minimizeBtn.classList.toggle('rotate-down', !isMinimized);
+
+    const radioList = document.getElementById('radioList');
+    if (radioList) {
+      radioList.style.marginBottom = isMinimized ? '80px' : '';
+    }
   }
 
   // Exit logic

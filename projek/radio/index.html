@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id" data-bs-theme="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,12 +10,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="./styles/style.css">
 </head>
+
 <body>
   <div class="container py-4" style="margin-top: 50px !important;">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
       <a class="navbar-brand d-flex align-items-center" href="#">
-        <i class="fas fa-broadcast-tower fa-lg me-2 text-info"></i>
+        <img src="./image/icon.png" alt="Logo" class="me-2 logo-icon" />
         <span class="fw-bold">Radio Stream</span>
       </a>
 
@@ -29,26 +31,34 @@
           <input class="form-control me-2" type="search" placeholder="Cari stasiun Radio..." aria-label="Search"
             id="searchInput">
           <button class="btn btn-outline-info" type="submit"><i class="fas fa-search"></i></button>
-        </form>        
+        </form>
       </div>
     </nav>
 
-    <div class="row g-3">
-      <div class="col-12 col-md-4">
-        <label for="country" class="form-label">Pilih Negara</label>
-        <select id="country" class="form-select"></select>
+    <div id="filterBar" class="filter-bar shadow-sm">
+      <div class="row g-3 p-3 align-items-end">
+        <!-- Form Negara -->
+        <div class="col-6 col-md-4">
+          <label for="country" class="form-label">Pilih Negara</label>
+          <select id="country" class="form-select"></select>
+        </div>
+
+        <!-- Form Genre -->
+        <div class="col-6 col-md-4">
+          <label for="genre" class="form-label">Pilih Genre</label>
+          <select id="genre" class="form-select">
+            <option value="">Semua</option>
+          </select>
+        </div>
+
+        <!-- Tombol Cari -->
+        <div class="col-12 col-md-4 d-grid">
+          <label class="form-label invisible">Cari</label>
+          <button id="loadBtn" class="btn btn-primary seach-button">
+            <i class="fas fa-search me-2"></i> Cari Radio
+          </button>
+        </div>
       </div>
-      <div class="col-12 col-md-4">
-        <label for="genre" class="form-label">Pilih Genre</label>
-        <select id="genre" class="form-select">
-          <option value="">Semua</option>
-        </select>
-      </div>
-      
-      <div class="col-12 col-md-4 d-grid">
-        <label class="form-label invisible">Cari</label>
-        <button id="loadBtn" class="btn btn-primary seach-button"> <i class="fas fa-search me-2"></i> Cari Radio</button>       
-      </div>   
     </div>
 
     <div id="loadingSpinner" class="text-center my-4 d-none">
@@ -69,75 +79,81 @@
       </svg>
       <p class="text-muted mt-0">Memuat stasiun radio</p>
     </div>
-    
+
     <ul id="radioList" class="list-group mt-4"></ul>
 
-   <!-- Floating Player -->
-   <div id="floatingPlayer" class="fixed-bottom bg-dark text-white shadow-lg d-none">
-     <!-- Mini Header: Tombol Minimize dan Exit -->
-     <div
-       class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom border-secondary floating-controls">
-       <div class="d-flex align-items-center gap-2">
-         <i class="fa-solid fa-angle-down cursor-pointer" id="minimizeBtn" title="Minimize"></i>
-       </div>
-       <i class="fa-solid fa-xmark cursor-pointer" id="exitBtn" title="Tutup"></i>
-     </div>
-
-     <div id="fullPlayerContent" class="p-3">
-       <div id="nowPlaying" class="mb-2">Belum ada stasiun diputar.</div>
-       <div class="d-flex align-items-center justify-content-between gap-3">
-         <div id="currentTime" class="text-white small" style="min-width: 40px;">00:00</div>
-
-         <div class="d-flex align-items-center gap-3 flex-grow-1 justify-content-center">
-           <i class="fa-solid fa-play cursor-pointer" id="togglePlayBtn" title="Mainkan" style="font-size: 1.5rem;"></i>
-         </div>
-
-         <i class="fa-solid fa-volume-xmark cursor-pointer" id="muteBtn" title="Mute" style="font-size: 1.2rem;"></i>
-       </div>
-       <audio id="audioPlayer" class="w-100 d-none"></audio>
-     </div>    
-
-     <!-- Konten Minimized -->
-     <div id="minimizedContent" class="d-none p-2 d-flex justify-content-between align-items-center p-3">
-       <div>
-         <div id="minTitle" class="fw-bold">Tidak ada lagu</div>
-         <div id="minDescription" class="text-muted small">Deskripsi</div>
-       </div>
-       <div class="d-flex align-items-center gap-2">
-         <i class="fa-solid fa-pause cursor-pointer" id="minimizedtogglePlayBtn"></i>
-       </div>
-     </div>
-   </div>
-  </div>
-
-  <!-- Redesain Modal Gagal Memutar - Dark Modern -->
-  <div class="modal fade" id="failModal" tabindex="-1" aria-labelledby="failModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-      <div class="modal-content bg-gradient-to-br from-gray-900 to-black text-white rounded-4 border-0 shadow-lg">
-
-        <div class="modal-header border-0 d-flex align-items-center px-4 pt-4 pb-2">
-          <div class="d-flex align-items-center">
-            <i class="fas fa-exclamation-circle text-danger fs-3 me-3"></i>
-            <h5 class="modal-title mb-0 fw-semibold" id="failModalLabel">Gagal Memutar</h5>
-          </div>
-          <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"
-            aria-label="Tutup"></button>
+    <!-- Floating Player -->
+    <div id="floatingPlayer" class="fixed-bottom bg-dark text-white shadow-lg d-none">
+      <!-- Mini Header: Tombol Minimize dan Exit -->
+      <div
+        class="d-flex justify-content-between align-items-center px-3 py-1 border-bottom border-secondary floating-controls">
+        <div class="d-flex align-items-center gap-2">
+          <i class="fa-solid fa-angle-down cursor-pointer" id="minimizeBtn" title="Minimize"></i>
         </div>
+        <i class="fa-solid fa-xmark cursor-pointer" id="exitBtn" title="Tutup"></i>
+      </div>
 
-        <div class="modal-body d-flex flex-column align-items-center text-center px-4 pb-4">
-          <i class="fas fa-radio text-primary fs-1 mb-3"></i>
-          <p class="fs-6 text-light mb-0">
-            Maaf, stasiun radio ini tidak dapat diputar saat ini.
-          </p>
+      <div id="fullPlayerContent" class="p-3">
+        <div id="nowPlaying" class="mb-2">Belum ada stasiun diputar.</div>
+        <div class="d-flex align-items-center justify-content-between gap-3">
+          <div id="currentTime" class="text-white small" style="min-width: 40px;">00:00</div>
+
+          <div class="d-flex align-items-center gap-3 flex-grow-1 justify-content-center">
+            <i class="fa-solid fa-play cursor-pointer" id="togglePlayBtn" title="Mainkan"
+              style="font-size: 1.5rem;"></i>
+          </div>
+
+          <i class="fa-solid fa-volume-xmark cursor-pointer" id="muteBtn" title="Mute" style="font-size: 1.2rem;"></i>
+        </div>
+        <audio id="audioPlayer" class="w-100 d-none"></audio>
+      </div>
+
+      <!-- Konten Minimized -->
+      <div id="minimizedContent" class="d-none p-2 d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center w-100 standars-margin">
+          <!-- Kontainer Kiri: Judul dan Deskripsi -->
+          <div class="flex-grow-1 overflow-hidden">
+            <div id="minTitle" class="fw-bold text-truncate">Tidak ada lagu</div>
+            <div id="minDescription" class="text-muted small text-truncate">Deskripsi</div>
+          </div>
+
+          <!-- Tombol Kanan -->
+          <div class="ms-2">
+            <i class="fa-solid fa-pause cursor-pointer" id="minimizedtogglePlayBtn"></i>
+          </div>
         </div>
 
       </div>
     </div>
-  </div>
+
+    <!-- Redesain Modal Gagal Memutar - Dark Modern -->
+    <div class="modal fade" id="failModal" tabindex="-1" aria-labelledby="failModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content bg-gradient-to-br from-gray-900 to-black text-white rounded-4 border-0 shadow-lg">
+
+          <div class="modal-header border-0 d-flex align-items-center px-4 pt-4 pb-2">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-exclamation-circle text-danger fs-3 me-3"></i>
+              <h5 class="modal-title mb-0 fw-semibold" id="failModalLabel">Gagal Memutar</h5>
+            </div>
+            <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"
+              aria-label="Tutup"></button>
+          </div>
+
+          <div class="modal-body d-flex flex-column align-items-center text-center px-4 pb-4">
+            <i class="fas fa-radio text-primary fs-1 mb-3"></i>
+            <p class="fs-6 text-light mb-0">
+              Maaf, stasiun radio ini tidak dapat diputar saat ini.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
 
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="./scripts/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./scripts/script.js"></script>
 
 </body>
 
