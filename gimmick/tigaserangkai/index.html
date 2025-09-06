@@ -1,0 +1,579 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk Tiga Serangkai</title>
+    <meta name="description" content="A brief description of my project.">
+    <link rel="icon" href="tsu logos.png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #979494;
+            /* ubah dari rgba gelap ke putih */
+            background-blend-mode: multiply;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #e0e0e0;
+            /* Subtle animated background overlay */
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: -20%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            background: repeating-radial-gradient(circle at 30% 30%, #2d6a4f22 0, #23252600 60px);
+            animation: moveBg 12s linear infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes moveBg {
+            0% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            100% {
+                transform: scale(1.1) rotate(8deg);
+            }
+        }
+
+        .login-container {
+            background: #ffffff;
+            /* putih bersih */
+            padding: 32px 24px;
+            border-radius: 14px;
+            box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 370px;
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            transition: box-shadow 0.35s cubic-bezier(.4, 2, .6, 1), transform 0.35s cubic-bezier(.4, 2, .6, 1);
+
+            /* aksen top border orange */
+            border-top: 6px solid #ff9800;
+            border-top-left-radius: 18px;
+        }
+
+        .login-container:focus-within,
+        .login-container:hover {
+            box-shadow: 0 10px 32px 0 rgba(0, 0, 0, 0.25), 0 0 0 4px #ff980022;
+            transform: translate(-50%, -53%) scale(1.015);
+        }
+
+        .login-container h1 {
+            margin-bottom: 12px;
+            color: #ff9800;
+            /* judul tetap orange */
+            letter-spacing: 1px;
+        }
+
+        .login-container p {
+            margin-bottom: 24px;
+            color: #444;
+            /* abu gelap biar kontras di tema terang */
+        }
+
+        .login-container input,
+        .login-container select {
+            width: 100%;
+            padding: 11px;
+            margin-bottom: 18px;
+            border: 1.5px solid #ccc;
+            border-radius: 7px;
+            font-size: 1em;
+            background: #f9f9f9;
+            /* abu terang */
+            color: #222;
+            transition: border 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        .login-container input:focus,
+        .login-container select:focus {
+            border-color: #ff9800;
+            outline: none;
+            background: #fff;
+            box-shadow: 0 0 0 3px #ff980044;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(90deg, #ff9800 60%, #e68900 100%);
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.15);
+            transition:
+                background 0.35s cubic-bezier(.4, 2, .6, 1),
+                box-shadow 0.35s cubic-bezier(.4, 2, .6, 1),
+                transform 0.35s cubic-bezier(.4, 2, .6, 1),
+                filter 0.35s cubic-bezier(.4, 2, .6, 1);
+        }
+
+        .login-container button:hover,
+        .login-container button:focus-visible {
+            background: linear-gradient(90deg, #e68900 60%, #ff9800 100%);
+            box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.25), 0 0 0 3px #ff980044;
+            transform: translateY(-2px) scale(1.025);
+            filter: brightness(1.08) saturate(1.15);
+            outline: none;
+        }
+
+        .success-message {
+            display: none;
+            margin-top: 18px;
+            color: #f60909;
+            /* hijau gelap untuk success */
+            font-weight: bold;
+        }
+
+
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 7px;
+            color: #000000;
+            font-size: 0.97em;
+        }
+
+        .logo-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .logo-wrapper img {
+            width: 64px;
+            /* bisa disesuaikan misalnya 48px, 64px, 80px */
+            height: 64px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <!-- Logo -->
+        <div class="logo-wrapper">
+            <img src="tsu logos.png" alt="Logo Universitas Tiga Serangkai">
+        </div>
+        <h1>Login Kampus</h1>
+        <p>Masuk Universitas Tiga Serangkai.</p>
+        <form id="loginForm">
+            <label for="nama">Nama Lengkap</label>
+            <input type="text" id="nama" name="nama" placeholder="Nama Lengkap" required>
+            <label for="prodi">Program Studi</label>
+            <select id="prodi" name="prodi" required>
+                <option value="" disabled selected>Pilih Program Studi</option>
+
+                <optgroup label="FAKULTAS TEKNIK">
+                    <option value="S1 Informatika">S1 Informatika</option>
+                    <option value="S1 Sistem Informasi">S1 Sistem Informasi</option>
+                    <option value="S1 Rekayasa Komputer">S1 Rekayasa Komputer</option>
+                </optgroup>
+
+                <optgroup label="FAKULTAS SAINS DAN HUMANIORA">
+                    <option value="S1 Manajemen">S1 Manajemen</option>
+                    <option value="S1 Psikologi">S1 Psikologi</option>
+                    <option value="S1 Pendidikan Guru Sekolah Dasar">S1 Pendidikan Guru Sekolah Dasar
+                    </option>
+                </optgroup>
+
+                <optgroup label="SEKOLAH VOKASI">
+                    <option value="D3 Teknologi Informasi">D3 Teknologi Informasi</option>
+                    <option value="D3 Sistem Informasi">D3 Sistem Informasi</option>
+                    <option value="D3 Desain Produk Tekstil">D3 Desain Produk Tekstil</option>
+                    <option value="D3 Desain Komunikasi Visual">D3 Desain Komunikasi Visual</option>
+                </optgroup>
+            </select>
+
+            <button type="submit">MASUK</button>
+        </form>
+        <div id="successMessage" class="success-message">
+           Ups! <span id="userName"></span> dari <span id="userProdi"></span>, 
+upaya masuk kampus belum berhasil.
+        </div>
+    </div>
+    <script>
+        const form = document.getElementById('loginForm');
+        const successMessage = document.getElementById('successMessage');
+        const userName = document.getElementById('userName');
+        const userProdi = document.getElementById('userProdi');
+
+        // Grid config for even distribution and consistent popup size
+        const GRID_COLS = 5,
+            GRID_ROWS = 3;
+        const POPUP_WIDTH = 220,
+            POPUP_HEIGHT = 100;
+        const CELL_PADDING_X = 30,
+            CELL_PADDING_Y = 20;
+
+        // Track all popup positions to avoid overlap
+        let allPopupRects = [];
+
+        function isOverlap(x, y, w, h) {
+            for (const rect of allPopupRects) {
+                if (
+                    x < rect.x + rect.w &&
+                    x + w > rect.x &&
+                    y < rect.y + rect.h &&
+                    y + h > rect.y
+                ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function getRandomPositionNoOverlap() {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            let tries = 0;
+            let x, y;
+            do {
+                x = Math.floor(Math.random() * (vw - POPUP_WIDTH - 40)) + 20;
+                y = Math.floor(Math.random() * (vh - POPUP_HEIGHT - 40)) + 20;
+                tries++;
+                if (tries > 50) break; // fallback if too many tries
+            } while (isOverlap(x, y, POPUP_WIDTH, POPUP_HEIGHT));
+            allPopupRects.push({
+                x,
+                y,
+                w: POPUP_WIDTH,
+                h: POPUP_HEIGHT
+            });
+            return {
+                x,
+                y
+            };
+        }
+
+        function getGridCellCenters() {
+            // Return array of {x, y} for each grid cell center, with padding
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const cellW = vw / GRID_COLS,
+                cellH = vh / GRID_ROWS;
+            let cells = [];
+            for (let row = 0; row < GRID_ROWS; row++) {
+                for (let col = 0; col < GRID_COLS; col++) {
+                    let padX = CELL_PADDING_X;
+                    if (col === GRID_COLS - 1) padX += 40;
+                    let x = Math.floor(col * cellW + padX + (cellW - POPUP_WIDTH - 2 * padX) / 2);
+                    let y = Math.floor(row * cellH + CELL_PADDING_Y + (cellH - POPUP_HEIGHT - 2 * CELL_PADDING_Y) / 2);
+                    cells.push({
+                        x,
+                        y
+                    });
+                }
+            }
+            return cells;
+        }
+
+        function showModalPopup(message, opts = {}) {
+            // Modal overlay, only create once
+            let overlay = document.getElementById('modalOverlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'modalOverlay';
+                overlay.style.position = 'fixed';
+                overlay.style.left = 0;
+                overlay.style.top = 0;
+                overlay.style.width = '100vw';
+                overlay.style.height = '100vh';
+                overlay.style.background = 'rgba(30,40,40,0.85)';
+                overlay.style.zIndex = 9998;
+                overlay.style.pointerEvents = 'auto';
+                overlay.style.overflow = 'hidden';
+                document.body.appendChild(overlay);
+            }
+
+            // Create popup
+            const popup = document.createElement('div');
+            popup.textContent = message;
+            popup.style.position = 'absolute';
+            popup.style.background = 'linear-gradient(90deg,#40916c 60%,#2d6a4f 100%)';
+            popup.style.color = '#fff';
+            popup.style.fontWeight = 'bold';
+            popup.style.fontSize = '1.2em';
+            popup.style.boxShadow = '0 6px 32px 0 rgba(0,0,0,0.28)';
+            popup.style.borderRadius = '14px';
+            popup.style.padding = '24px 18px';
+            popup.style.display = 'flex';
+            popup.style.alignItems = 'center';
+            popup.style.justifyContent = 'center';
+            popup.style.textAlign = 'center';
+            popup.style.width = POPUP_WIDTH + 'px';
+            popup.style.height = POPUP_HEIGHT + 'px';
+            popup.style.minWidth = POPUP_WIDTH + 'px';
+            popup.style.minHeight = POPUP_HEIGHT + 'px';
+            popup.style.maxWidth = POPUP_WIDTH + 'px';
+            popup.style.maxHeight = POPUP_HEIGHT + 'px';
+            popup.style.opacity = '0.97';
+            popup.style.pointerEvents = 'none';
+            popup.style.whiteSpace = 'pre-line';
+
+            if (opts.center) {
+                popup.style.left = '50%';
+                popup.style.top = '50%';
+                popup.style.transform = 'translate(-50%, -50%)';
+                popup.style.fontSize = '1.5em';
+                popup.style.width = '320px';
+                popup.style.height = '120px';
+                popup.style.minWidth = '320px';
+                popup.style.minHeight = '120px';
+                popup.style.maxWidth = '320px';
+                popup.style.maxHeight = '120px';
+                popup.style.background = 'linear-gradient(90deg,#7fffd4 60%,#40916c 100%)';
+                popup.style.color = '#232526';
+                popup.style.boxShadow = '0 12px 48px 0 rgba(0,0,0,0.38)';
+            } else if (opts.gridCellCenter) {
+                // Place at exact grid cell center for final fill
+                const {
+                    x,
+                    y
+                } = opts.gridCellCenter;
+                popup.style.left = x + 'px';
+                popup.style.top = y + 'px';
+            } else if (opts.randomXY) {
+                popup.style.left = opts.randomXY.x + 'px';
+                popup.style.top = opts.randomXY.y + 'px';
+            }
+
+            overlay.appendChild(popup);
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            userName.textContent = document.getElementById('nama').value;
+            userProdi.textContent = document.getElementById('prodi').value;
+            successMessage.style.display = 'block';
+            form.style.display = 'none';
+
+            // Remove previous overlay if any
+            const oldOverlay = document.getElementById('modalOverlay');
+            if (oldOverlay) oldOverlay.remove();
+            allPopupRects = [];
+
+            // Prepare all grid cell centers for final fill
+            const gridCellCenters = getGridCellCenters();
+
+            // Pop up muncul satu per satu secara berkala, selama 20 detik, random di seluruh layar
+            const duration = 20000;
+            const interval = 350; // ms
+            const start = Date.now();
+
+            function spawnPopup() {
+                // Random position, avoid overlap
+                const pos = getRandomPositionNoOverlap();
+                // Create popup with logo on the left and reminder text on the right
+                let overlay = document.getElementById('modalOverlay');
+                if (!overlay) {
+                    overlay = document.createElement('div');
+                    overlay.id = 'modalOverlay';
+                    overlay.style.position = 'fixed';
+                    overlay.style.left = 0;
+                    overlay.style.top = 0;
+                    overlay.style.width = '100vw';
+                    overlay.style.height = '100vh';
+                    overlay.style.background = 'rgba(30,40,40,0.85)';
+                    overlay.style.zIndex = 9998;
+                    overlay.style.pointerEvents = 'auto';
+                    overlay.style.overflow = 'hidden';
+                    document.body.appendChild(overlay);
+                }
+
+                const popup = document.createElement('div');
+                popup.style.position = 'absolute';
+                popup.style.background = '#fff';
+                popup.style.color = '#232526';
+                popup.style.fontWeight = 'bold';
+                popup.style.fontSize = '1.1em';
+                popup.style.boxShadow = '0 6px 32px 0 rgba(0,0,0,0.18)';
+                popup.style.borderRadius = '14px';
+                popup.style.padding = '18px 14px 14px 14px';
+                popup.style.display = 'flex';
+                popup.style.alignItems = 'center';
+                popup.style.textAlign = 'left';
+                popup.style.width = POPUP_WIDTH + 'px';
+                popup.style.height = POPUP_HEIGHT + 'px';
+                popup.style.minWidth = POPUP_WIDTH + 'px';
+                popup.style.minHeight = POPUP_HEIGHT + 'px';
+                popup.style.maxWidth = POPUP_WIDTH + 'px';
+                popup.style.maxHeight = POPUP_HEIGHT + 'px';
+                popup.style.opacity = '0.97';
+                popup.style.pointerEvents = 'none';
+                popup.style.gap = '14px';
+                popup.style.left = pos.x + 'px';
+                popup.style.top = pos.y + 'px';
+                // Orange accent: top border and top-left corner
+                popup.style.borderTop = '6px solid #ff9800';
+                popup.style.borderTopLeftRadius = '18px';
+
+                // Orange accent: small square in top-left
+                const orangeAccent = document.createElement('div');
+                orangeAccent.style.position = 'absolute';
+                orangeAccent.style.left = '0';
+                orangeAccent.style.top = '0';
+                orangeAccent.style.width = '28px';
+                orangeAccent.style.height = '28px';
+                orangeAccent.style.background = '#ff9800';
+                orangeAccent.style.borderTopLeftRadius = '18px';
+                orangeAccent.style.zIndex = '1';
+                popup.appendChild(orangeAccent);
+
+                // Logo (image with relative path)
+                const logo = document.createElement('div');
+                logo.style.flex = '0 0 auto';
+                logo.style.width = '48px';
+                logo.style.height = '48px';
+                logo.style.display = 'flex';
+                logo.style.alignItems = 'center';
+                logo.style.justifyContent = 'center';
+                logo.style.background = '#fff2';
+                logo.style.borderRadius = '50%';
+                logo.style.marginRight = '8px';
+                logo.style.zIndex = '2';
+                // Change 'logo.png' to your actual relative image path
+                logo.innerHTML =
+                    `<img src="tsu logos.png" alt="Logo" style="width:32px;height:32px;object-fit:contain;display:block;">`;
+
+                // Reminder text
+                const reminder = document.createElement('div');
+                reminder.textContent = "Harap membuat video perkenalan terlebih dahulu!";
+                reminder.style.fontWeight = 'bold';
+                reminder.style.fontSize = '1em';
+                reminder.style.color = '#232526';
+                reminder.style.background = 'rgba(30,40,60,0.07)';
+                reminder.style.padding = '7px 12px';
+                reminder.style.borderRadius = '7px';
+                reminder.style.boxShadow = '0 1px 6px 0 #181a1b12';
+                reminder.style.borderLeft = '4px solid #0d1b4d'; // dark blue
+                reminder.style.letterSpacing = '0.5px';
+                reminder.style.zIndex = '2';
+
+                popup.appendChild(logo);
+                popup.appendChild(reminder);
+
+                overlay.appendChild(popup);
+            }
+
+            let intervalId = setInterval(() => {
+                if (Date.now() - start >= duration) {
+                    clearInterval(intervalId);
+
+                    let overlay = document.getElementById('modalOverlay');
+
+                    const POPUP_WIDTH = 420; // lebih panjang
+                    const POPUP_HEIGHT = 120;
+
+                    const popup = document.createElement('div');
+                    popup.style.position = 'fixed'; // fixed biar selalu di tengah viewport
+                    popup.style.background = '#fff';
+                    popup.style.color = '#232526';
+                    popup.style.fontWeight = 'bold';
+                    popup.style.fontSize = '1.1em';
+                    popup.style.boxShadow = '0 6px 32px 0 rgba(0,0,0,0.18)';
+                    popup.style.borderRadius = '14px';
+                    popup.style.padding = '18px 14px 14px 14px';
+                    popup.style.display = 'flex';
+                    popup.style.alignItems = 'center';
+                    popup.style.textAlign = 'left';
+                    popup.style.width = POPUP_WIDTH + 'px';
+                    popup.style.height = POPUP_HEIGHT + 'px';
+                    popup.style.minWidth = POPUP_WIDTH + 'px';
+                    popup.style.minHeight = POPUP_HEIGHT + 'px';
+                    popup.style.maxWidth = POPUP_WIDTH + 'px';
+                    popup.style.maxHeight = POPUP_HEIGHT + 'px';
+                    popup.style.opacity = '0.97';
+                    popup.style.pointerEvents = 'none';
+                    popup.style.gap = '14px';
+
+                    // taruh di tengah
+                    popup.style.top = '50%';
+                    popup.style.left = '50%';
+                    popup.style.transform = 'translate(-50%, -50%)';
+
+                    // Orange accent: top border and top-left corner
+                    popup.style.borderTop = '6px solid #ff9800';
+                    popup.style.borderTopLeftRadius = '18px';
+
+                    // Orange accent: small square in top-left
+                    const orangeAccent = document.createElement('div');
+                    orangeAccent.style.position = 'absolute';
+                    orangeAccent.style.left = '0';
+                    orangeAccent.style.top = '0';
+                    orangeAccent.style.width = '28px';
+                    orangeAccent.style.height = '28px';
+                    orangeAccent.style.background = '#ff9800';
+                    orangeAccent.style.borderTopLeftRadius = '18px';
+                    orangeAccent.style.zIndex = '1';
+                    popup.appendChild(orangeAccent);
+
+                    // Logo
+                    const logo = document.createElement('div');
+                    logo.style.flex = '0 0 auto';
+                    logo.style.width = '64px'; // dari 48px → 64px
+                    logo.style.height = '64px'; // dari 48px → 64px
+                    logo.style.display = 'flex';
+                    logo.style.alignItems = 'center';
+                    logo.style.justifyContent = 'center';
+                    logo.style.background = '#fff2';
+                    logo.style.borderRadius = '50%';
+                    logo.style.marginRight = '10px';
+                    logo.style.zIndex = '2';
+                    logo.innerHTML =
+                        `<img src="tsu logos.png" alt="Logo" 
+          style="width:44px;height:44px;object-fit:contain;display:block;">`; // dari 32px → 44px
+
+                    // Reminder text
+                    const reminder = document.createElement('div');
+                    reminder.textContent = "VIDEO PERKENALAN DULU WOYY!";
+                    reminder.style.fontWeight = 'bold';
+                    reminder.style.fontSize = '1.2em'; // lebih besar (dari 1em → 1.2em)
+                    reminder.style.color = '#232526';
+                    reminder.style.background = 'rgba(30,40,60,0.07)';
+                    reminder.style.padding = '10px 14px'; // padding lebih lebar
+                    reminder.style.borderRadius = '8px';
+                    reminder.style.boxShadow = '0 2px 8px 0 #181a1b12';
+                    reminder.style.borderLeft = '5px solid #0d1b4d'; // garis lebih tebal
+                    reminder.style.letterSpacing = '0.6px';
+                    reminder.style.zIndex = '2';
+
+
+                    popup.appendChild(logo);
+                    popup.appendChild(reminder);
+
+                    overlay.appendChild(popup);
+                    return;
+                }
+                spawnPopup();
+            }, interval);
+
+
+            // Spawn first popup immediately
+            spawnPopup();
+        });
+    </script>
+</body>
+
+</html>
