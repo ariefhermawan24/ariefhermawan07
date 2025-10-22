@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function fetchCountries() {
     try {
       const [countriesRes, restCountriesRes] = await Promise.all([
-        fetch('https://de1.api.radio-browser.info/json/countries'),
+        fetch('https://de2.api.radio-browser.info/json/countries'),
         fetch('https://restcountries.com/v3.1/all?fields=cca2,name')
       ]);
 
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function fetchStarterStations() {
     showLoading();
     try {
-      const res = await fetch('https://de1.api.radio-browser.info/json/stations/topclick/50');
+      const res = await fetch('https://de2.api.radio-browser.info/json/stations/topclick/50');
       const stations = await res.json();
       displayStations(stations.filter(s => s.url_resolved));
     } catch (error) {
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const genreSelect = document.getElementById('genre');
 
     try {
-      const res = await fetch('https://de1.api.radio-browser.info/json/tags');
+      const res = await fetch('https://de2.api.radio-browser.info/json/tags');
       const tags = await res.json();
 
       // Urutkan berdasarkan jumlah stasiun (paling populer)
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const countryCode = selectedOption?.dataset.code || '';
     const genre = genreSelect.value.trim();
 
-    let url = 'https://de1.api.radio-browser.info/json/stations/search?limit=1000';
+    let url = 'https://de2.api.radio-browser.info/json/stations/search?limit=1000';
 
     if (countryCode !== '') {
       url += `&countrycode=${encodeURIComponent(countryCode)}`;
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     showLoading();
 
-    const url = `https://de1.api.radio-browser.info/json/stations/search?name=${encodeURIComponent(query)}&limit=1000`;
+    const url = `https://de2.api.radio-browser.info/json/stations/search?name=${encodeURIComponent(query)}&limit=1000`;
 
     try {
       const res = await fetch(url);

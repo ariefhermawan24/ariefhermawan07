@@ -167,6 +167,69 @@
             height: 64px;
             object-fit: contain;
         }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .login-container {
+                max-width: 90%;
+                padding: 24px 18px;
+                border-radius: 12px;
+            }
+
+            .login-container h1 {
+                font-size: 1.4em;
+            }
+
+            .login-container p {
+                font-size: 0.95em;
+            }
+
+            .login-container input,
+            .login-container select {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+
+            .login-container button {
+                font-size: 0.95em;
+                padding: 11px;
+            }
+
+            .logo-wrapper img {
+                width: 52px;
+                height: 52px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                max-width: 95%;
+                padding: 20px 16px;
+            }
+
+            .login-container h1 {
+                font-size: 1.2em;
+            }
+
+            .login-container p {
+                font-size: 0.9em;
+            }
+
+            .login-container input,
+            .login-container select {
+                font-size: 0.85em;
+            }
+
+            .login-container button {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+
+            .logo-wrapper img {
+                width: 44px;
+                height: 44px;
+            }
+        }
     </style>
 </head>
 
@@ -209,8 +272,8 @@
             <button type="submit">MASUK</button>
         </form>
         <div id="successMessage" class="success-message">
-           Ups! <span id="userName"></span> dari <span id="userProdi"></span>, 
-upaya masuk kampus belum berhasil.
+            Ups! <span id="userName"></span> dari <span id="userProdi"></span>,
+            upaya masuk kampus belum berhasil.
         </div>
     </div>
     <script>
@@ -499,10 +562,10 @@ upaya masuk kampus belum berhasil.
                     popup.style.alignItems = 'center';
                     popup.style.textAlign = 'left';
                     popup.style.width = POPUP_WIDTH + 'px';
-                    popup.style.height = POPUP_HEIGHT + 'px';
+                    popup.style.width = '90%';         // pakai persentase agar fleksibel
                     popup.style.minWidth = POPUP_WIDTH + 'px';
                     popup.style.minHeight = POPUP_HEIGHT + 'px';
-                    popup.style.maxWidth = POPUP_WIDTH + 'px';
+                    popup.style.maxWidth = POPUP_WIDTH + 'px'; // tapi jangan lebih dari 420px
                     popup.style.maxHeight = POPUP_HEIGHT + 'px';
                     popup.style.opacity = '0.97';
                     popup.style.pointerEvents = 'none';
