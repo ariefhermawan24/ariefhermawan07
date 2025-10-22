@@ -21,6 +21,80 @@ document.addEventListener('DOMContentLoaded', () => {
   const icon = navbarToggler.querySelector('i');
   const navbarContent = document.getElementById('navbarContent');
 
+  function showToast(message) {
+    const toast = document.getElementById("server-toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    toast.classList.remove("hide");
+  }
+
+  function hideToast(delay = 1000) {
+    const toast = document.getElementById("server-toast");
+    setTimeout(() => {
+      toast.classList.add("hide");
+      toast.classList.remove("show");
+    }, delay);
+  }
+  
+  const serverList = [
+    "https://de1.api.radio-browser.info/json/",
+    "https://de2.api.radio-browser.info/json/",
+    "https://fi1.api.radio-browser.info/json/"
+  ];
+
+  let selectedServer = ""; // akan diisi otomatis setelah pengecekan
+
+  // ---------- Server Selection Logic ----------
+  async function selectWorkingServer() {
+    showToast("🔄 Fetching available servers...");
+    for (const base of serverList) {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000); // timeout 5 detik
+
+        const resp = await fetch(base + "stations", {
+          method: "GET",
+          cache: "no-store",
+          signal: controller.signal
+        });
+        clearTimeout(timeout);
+
+        if (resp.ok) {
+          selectedServer = base;
+          console.log(`✅ Connected to working server: ${base}`);
+          showToast(`✅ Server loaded successfully`);
+          hideToast(1500);
+          return base;
+        } else {
+          console.warn(`⚠️ Server ${base} status ${resp.status}, mencoba berikutnya...`);
+        }
+      } catch (e) {
+        console.warn(`❌ Gagal konek ke ${base}: ${e.message}`);
+      }
+    }
+    showToast(`Sorry All Servers Unavailable :(`);
+    throw new Error("🚨 Semua server Radio Browser gagal diakses.");
+  }
+
+  // ---------- Inisialisasi Aplikasi ----------
+  (async () => {
+    try {
+      await selectWorkingServer(); // Jalankan 1x saja
+
+      console.log("🎯 Active server:", selectedServer);
+
+      // Setelah server aktif, langsung jalankan semua fungsi dependent
+      await Promise.all([
+        fetchCountries(),
+        fetchStarterStations(),
+        loadTopGenres(400),
+        handleSearch()
+      ]);
+    } catch (err) {
+      console.error("Gagal inisialisasi aplikasi:", err);
+    }
+  })();
+
   let animating = false;
 
   function delay(ms) {
@@ -93,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function fetchCountries() {
     try {
       const [countriesRes, restCountriesRes] = await Promise.all([
-        fetch('https://de2.api.radio-browser.info/json/countries'),
+        fetch(selectedServer + 'countries'),
         fetch('https://restcountries.com/v3.1/all?fields=cca2,name')
       ]);
 
@@ -154,6 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         index += batchSize;
         if (index < processed.length) {
+          // this 
           requestAnimationFrame(renderNextBatch);
         }
       }
@@ -165,11 +240,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-
   async function fetchStarterStations() {
     showLoading();
     try {
-      const res = await fetch('https://de2.api.radio-browser.info/json/stations/topclick/50');
+      const res = await fetch(selectedServer + 'stations/topclick/50');
       const stations = await res.json();
       displayStations(stations.filter(s => s.url_resolved));
     } catch (error) {
@@ -184,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const genreSelect = document.getElementById('genre');
 
     try {
-      const res = await fetch('https://de2.api.radio-browser.info/json/tags');
+      const res = await fetch(selectedServer + 'tags');
       const tags = await res.json();
 
       // Urutkan berdasarkan jumlah stasiun (paling populer)
@@ -203,14 +277,14 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Gagal memuat genre:', error);
     }
   }
-  loadTopGenres(400); // Ambil 20 genre terpopuler
+  loadTopGenres(400); 
 
   loadBtn.addEventListener('click', async () => {
     const selectedOption = countrySelect.options[countrySelect.selectedIndex];
     const countryCode = selectedOption?.dataset.code || '';
     const genre = genreSelect.value.trim();
 
-    let url = 'https://de2.api.radio-browser.info/json/stations/search?limit=1000';
+    let url = selectedServer+'stations/search?limit=1000';
 
     if (countryCode !== '') {
       url += `&countrycode=${encodeURIComponent(countryCode)}`;
@@ -255,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     showLoading();
 
-    const url = `https://de2.api.radio-browser.info/json/stations/search?name=${encodeURIComponent(query)}&limit=1000`;
+    const url = selectedServer + `stations/search?name=${encodeURIComponent(query)}&limit=1000`;
 
     try {
       const res = await fetch(url);
