@@ -498,33 +498,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function playStation(station) {
-    // Pastikan URL valid dan perbaiki jika masih pakai http://
-  if (!station.url_resolved) {
-    showErrorModal();
-    setPlayButtonsState("error");
-    return;
-  }
-
-  // Jika website kamu menggunakan HTTPS tapi stream masih HTTP,
-  // ubah otomatis jadi HTTPS untuk menghindari mixed content error
-  if (
-    location.protocol === "https:" &&
-    station.url_resolved.startsWith("http://")
-  ) {
-    const httpsUrl = station.url_resolved.replace("http://", "https://");
-    console.log("URL diubah ke HTTPS:", httpsUrl);
-    station.url_resolved = httpsUrl;
-  }
-
-  // Cek ulang apakah URL valid setelah konversi
-  if (
-    !station.url_resolved.startsWith("http://") &&
-    !station.url_resolved.startsWith("https://")
-  ) {
-    showErrorModal();
-    setPlayButtonsState("error");
-    return;
-  }
+    if (!station.url_resolved ||(!station.url_resolved.startsWith("http://") && !station.url_resolved.startsWith("https://"))) {
+      showErrorModal();
+      setPlayButtonsState("error");
+      return;
+    }
 
     const displayCountry = await getCountryNameFromCode(station.countrycode);
 
