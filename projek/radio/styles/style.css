@@ -3,6 +3,10 @@ body {
   color: #f8f9fa;
 }
 
+.title {
+  font-family: "Playwrite DE SAS", cursive;
+}
+
 #nowPlaying {
   font-size: 1.1rem;
 }
