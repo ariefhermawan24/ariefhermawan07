@@ -398,9 +398,25 @@ document.addEventListener('DOMContentLoaded', () => {
          title="HLS support"
          style="color: ${station.hls === 1 ? '#ffc107' : '#ccc'};"></i>
       &nbsp;•&nbsp;
-      <i class="fa-${station.lastcheckok === 1 ? 'solid fa-circle-check' : 'solid fa-circle-xmark'}" 
-         title="${station.lastcheckok === 1 ? 'OK' : 'Error'}"
-         style="color: ${station.lastcheckok === 1 ? '#28a745' : '#dc3545'};"></i>
+      <i class="fa-${station.lastcheckok === 1 
+              ? (station.url_resolved?.startsWith('https://') 
+                  ? 'solid fa-circle-check' 
+                  : 'solid fa-circle-exclamation') 
+              : 'solid fa-circle-xmark'}"
+              
+        title="${station.lastcheckok === 1 
+              ? (station.url_resolved?.startsWith('https://') 
+                  ? 'ok - bisa dijalankan' 
+                  : 'not sure - kemungkinan bisa') 
+              : 'cant - tidak bisa dijalankan'}"
+              
+        style="color: ${station.lastcheckok === 1 
+              ? (station.url_resolved?.startsWith('https://') 
+                  ? '#28a745'    // hijau untuk aman
+                  : '#ffc107')   // kuning untuk http
+              : '#dc3545'};"> 
+      </i>
+
     </div>
     <button class="btn btn-sm btn-success">Putar</button>
   </div>
