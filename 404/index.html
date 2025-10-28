@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 - Halaman Tidak Ditemukan</title>
+    <link rel="icon" href="../image/logo/Logo Portofolio.png" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* reset & safety */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            /* penting: cegah horizontal scroll */
+            -webkit-text-size-adjust: 100%;
+            background: #0b1a2b;
+            color: #fff;
+            font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        /* page layout */
+        .wrap {
+            max-width: 1100px;
+            /* batas lebar konten */
+            width: 100%;
+            padding: 18px 24px;
+            /* ruang dalam responsif */
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: transparent;
+            /* header tidak perlu box-shadow besar agar tetap ringan */
+        }
+
+        header img {
+            display: block;
+            width: 46px;
+            height: 46px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex: 0 0 auto;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: clamp(20px, 2.2vw, 16px);
+            color: #ffffff;
+            font-weight: bold;
+            white-space: nowrap;
+            /* agar nama tidak pecah ke baris lain kecuali terpaksa */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        main {
+            min-height: calc(100vh - 120px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 12px;
+            text-align: center;
+        }
+
+        .card {
+            width: 100%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.00));
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 6px 28px rgba(2, 6, 23, 0.6);
+        }
+
+        .icon {
+            color: #ff764d;
+            margin-bottom: 10px;
+            /* font size responsive: minimum 36px up to 72px, based on viewport */
+            font-size: clamp(36px, 8vw, 72px);
+            line-height: 1;
+            display: inline-block;
+        }
+
+        .code404 {
+            margin: 6px 0 10px;
+            color: #ff764d;
+            font-weight: 700;
+            /* responsive big number but never overflow */
+            font-size: clamp(40px, 12vw, 84px);
+            letter-spacing: 1px;
+            line-height: 0.95;
+            word-break: break-word;
+        }
+
+        .desc {
+            margin: 0 auto;
+            max-width: 680px;
+            color: #d0d0d0;
+            font-size: clamp(14px, 2.2vw, 16px);
+            line-height: 1.6;
+            hyphens: auto;
+            word-break: break-word;
+        }
+
+        .btn-home {
+            margin-top: 22px;
+            display: inline-block;
+            background-color: #ff764d;
+            color: #fff;
+            border: none;
+            padding: 12px 26px;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+            text-decoration: none;
+        }
+
+        .btn-home:active {
+            transform: translateY(1px);
+        }
+
+        .btn-home:hover {
+            transform: translateY(-4px);
+            background: #ff946f;
+            box-shadow: 0 6px 18px rgba(255, 118, 77, 0.15);
+        }
+
+        /* popup bottom */
+        .popup {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -90px;
+            background: #132538;
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 10px;
+            box-shadow: 0 6px 24px rgba(2, 8, 24, 0.6);
+            transition: bottom .45s cubic-bezier(.2, .9, .3, 1), opacity .35s ease;
+            opacity: 0;
+            z-index: 999;
+            font-size: 14px;
+            max-width: calc(100% - 32px);
+            text-align: center;
+        }
+
+        .popup.show {
+            bottom: 28px;
+            opacity: 1;
+        }
+
+        footer {
+            padding: 12px 0;
+            text-align: center;
+            color: #bfcbdc;
+            font-size: 13px;
+        }
+
+        /* ensure images and SVGs never overflow */
+        img,
+        svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        @media (max-width: 520px) {
+  .wrap { 
+    padding-left: 14px; 
+    padding-right: 14px; 
+  }
+
+  header {
+    gap: 10px;
+    align-items: center;
+    justify-content: center; /* ✅ posisi tengah horizontal */
+    flex-wrap: wrap; /* ✅ biar teks bisa turun ke bawah logo kalau sempit */
+    text-align: center;
+  }
+
+  header img {
+    width: 45px; /* ✅ perkecil ukuran logo */
+    margin: 0 auto; /* ✅ pastikan di tengah */
+  }
+
+  header h1 {
+    width: 100%;
+    font-size: 14px; /* ✅ sedikit lebih kecil agar proporsional */
+    margin-top: 4px;
+  }
+
+  .card { 
+    padding: 20px; 
+    border-radius: 10px; 
+  }
+
+  .desc { 
+    font-size: 14px; 
+  }
+
+  .btn-home { 
+    padding: 10px 20px; 
+    font-size: 14px; 
+  }
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <img src="../image/logo/Logo Portofolio.png" alt="Logo Portofolio">
+            <h1>Muhammad Arief Hermawan</h1>
+        </header>
+
+        <main>
+            <section class="card" role="main" aria-labelledby="title404">
+                <div class="icon" aria-hidden="true"><i class="fa-regular fa-face-frown"></i></div>
+                <div id="title404" class="code404">404</div>
+                <p class="desc">
+                    Maaf — halaman yang kamu cari tidak ditemukan
+                    Kamu akan diarahkan kembali ke beranda secara otomatis.
+                </p>
+
+                <div style="margin-top:18px;">
+                    <a class="btn-home" href="../" id="btnHome">Kembali ke Beranda</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="popup" id="popup">Mengalihkan otomatis ke halaman utama dalam <strong><span
+                id="countdown">5</span>s</strong>...</div>
+
+    <footer>&copy; 2025 Muhammad Arief Hermawan | Web & Android Developer</footer>
+
+    <script>
+        // popup countdown + redirect
+        (function () {
+          const popup = document.getElementById('popup');
+          const countdownEl = document.getElementById('countdown');
+          const btn = document.getElementById('btnHome');
+
+          let t = 5;
+          // show popup after small delay
+          setTimeout(() => popup.classList.add('show'), 600);
+
+          const interval = setInterval(() => {
+            t--;
+            if (t >= 0) countdownEl.textContent = t;
+            if (t <= 0) {
+              clearInterval(interval);
+              // fade-out visual before navigation
+              document.documentElement.style.transition = 'opacity .35s ease';
+              document.documentElement.style.opacity = '0';
+              setTimeout(() => { window.location.href = '../'; }, 360);
+            }
+          }, 1000);
+
+          // allow manual click to go home (and stop countdown)
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            clearInterval(interval);
+            window.location.href = this.getAttribute('href');
+          });
+        })();
+    </script>
+</body>
+
+</html>
